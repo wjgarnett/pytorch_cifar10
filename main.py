@@ -6,6 +6,7 @@ import torch.optim as optim
 import torch.backends.cudnn as cudnn
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import ExponentialLR
+from torch.optim.lr_scheduler import StepLR
 
 from dataloader.cifar10_loader import CIFAR10Loader
 from models.net1st import Net1st
@@ -122,10 +123,12 @@ def main():
     # optimizer = optim.Adadelta(model.parameters(), lr=CFG.learning_rate)
     optimizer = optim.Adam(model.parameters(), lr=CFG.learning_rate)
     criterion = nn.CrossEntropyLoss()  # 损失函数
-    scheduler = ExponentialLR(optimizer, 0.9) #学习率调整策略
+    # scheduler = ExponentialLR(optimizer, 0.9) #学习率调整策略
+    scheduler = StepLR(optimizer, 40, gamma=0.33)
 
     #---train---
     for epoch in range(CFG.resume_epoch, CFG.resume_epoch+CFG.num_epoch):
+        logging.info("\nepoch: {}, learning rate: {}".format(epoch, scheduler.get_lr()))
         train(model, device, train_loader, optimizer, criterion, epoch, log_iter=CFG.log_iter)
         test(model, device, test_loader, criterion, epoch)
         scheduler.step()
