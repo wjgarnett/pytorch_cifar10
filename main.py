@@ -86,7 +86,7 @@ def test(model, device, test_loader, criterion, epoch):
 def main():
     #---数据加载+数据增强---
     train_set = CIFAR10Loader(root='./Data', train=True, transform=True)
-    test_set = CIFAR10Loader(root='./Data', train=False, transform=True)
+    test_set = CIFAR10Loader(root='./Data', train=False, transform=False)
     # print("trainset: ", len(trainset))
     # print("testset: ", len(testset))
     train_loader = DataLoader(train_set, batch_size=CFG.batch_size, shuffle=True, num_workers=2)

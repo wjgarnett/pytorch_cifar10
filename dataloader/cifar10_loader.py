@@ -38,7 +38,7 @@ class CIFAR10Loader(Dataset): #封装数据增强，其实可以不用封装的�
         else:
             self.transform = transforms.Compose([
                 transforms.ToTensor(),
-                transforms.Normalize(mean, std)])
+                transforms.Normalize(CFG.mean, CFG.std)])
 
         self.dataset = torchvision.datasets.CIFAR10(root=self.root, train=self.train, download=self.download,
                                                     transform=self.transform)
