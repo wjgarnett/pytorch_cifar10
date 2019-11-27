@@ -6,7 +6,7 @@ class Config(object):
 # hyper parameters
     num_epoch = 2000
     batch_size = 256
-    learning_rate = 0.01
+    learning_rate = 0.006
 
     mean = (0.4914, 0.4822, 0.4465)
     std = (0.2023, 0.1994, 0.2010)

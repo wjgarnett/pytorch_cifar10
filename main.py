@@ -14,8 +14,8 @@ from models.net1st import Net1st
 from models.resnet import ResNet18
 
 from config import CFG
-import logging
-from utils.log import Log
+from utils.log import logger as logging
+# import logging
 
 def make_if_not_exist(path):
     if not os.path.exists(path):
@@ -24,7 +24,6 @@ make_if_not_exist("./checkpoints")
 make_if_not_exist("./log")
 # if not os.path.exists(CFG.log_file):
 #     os.makedirs(CFG.log_file)
-Log(CFG.log_file)
 
 
 def train(model, device, train_loader, optimizer, criterion, epoch, log_iter=1000):
@@ -136,7 +135,7 @@ def main():
     # optimizer = optim.Adam(model.parameters(), lr=CFG.learning_rate)
     criterion = nn.CrossEntropyLoss()  # 损失函数
     # scheduler = ExponentialLR(optimizer, 0.9) #学习率调整策略
-    scheduler = StepLR(optimizer, 10, gamma=0.95)
+    scheduler = StepLR(optimizer, 10, gamma=0.7)
 
     #---train---
     for epoch in range(CFG.resume_epoch, CFG.resume_epoch+CFG.num_epoch):
