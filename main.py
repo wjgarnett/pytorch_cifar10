@@ -7,9 +7,11 @@ import torch.backends.cudnn as cudnn
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import ExponentialLR
 from torch.optim.lr_scheduler import StepLR
+from torchvision import models
 
 from dataloader.cifar10_loader import CIFAR10Loader
 from models.net1st import Net1st
+from models.resnet import ResNet18
 
 from config import CFG
 import logging
@@ -61,7 +63,7 @@ def test(model, device, test_loader, criterion, epoch):
 
     test_loss /= len(test_loader)
 
-    logging.info('Test set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)'.format(
+    logging.info('Test set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
         test_loss, correct, len(test_loader.dataset),
         100. * correct / len(test_loader.dataset)))
     # writer.add_scalar("test loss", test_loss, global_step=epoch)
@@ -94,7 +96,17 @@ def main():
     test_loader = DataLoader(test_set, batch_size=CFG.batch_size, shuffle=False, num_workers=2)
 
     #---网络模型定义及加载---
-    model = Net1st()
+    model = ResNet18()
+    # model = models.resnet18(pretrained=True)
+    # model.fc = nn.Linear(in_features=512, out_features=10)
+    # params = list(model.parameters())
+    # print(model)
+    #
+    # for para in params[:-1]:
+    #     para.requires_grad = False
+    # print(len(params))
+    # print(params)
+    # model = Net1st()
     if CFG.resume:
         # pth_file = os.path.join(CFG.ckpt_dir, CFG.file_name)
         if os.path.exists(CFG.pth_file):
@@ -119,19 +131,20 @@ def main():
     model = model.to(device)  # to device
 
     #---优化器损失函数定义+学习率调整策略设置---
-    # optimizer = optim.SGD(model.parameters(), lr=CFG.learning_rate, momentum=0.9)
+    optimizer = optim.SGD(model.parameters(), lr=CFG.learning_rate, momentum=0.9)
     # optimizer = optim.Adadelta(model.parameters(), lr=CFG.learning_rate)
-    optimizer = optim.Adam(model.parameters(), lr=CFG.learning_rate)
+    # optimizer = optim.Adam(model.parameters(), lr=CFG.learning_rate)
     criterion = nn.CrossEntropyLoss()  # 损失函数
     # scheduler = ExponentialLR(optimizer, 0.9) #学习率调整策略
-    scheduler = StepLR(optimizer, 40, gamma=0.33)
+    scheduler = StepLR(optimizer, 10, gamma=0.95)
 
     #---train---
     for epoch in range(CFG.resume_epoch, CFG.resume_epoch+CFG.num_epoch):
-        logging.info("\nepoch: {}, learning rate: {}".format(epoch, scheduler.get_lr()))
+        logging.info("epoch: {}, learning rate: {}".format(epoch, scheduler.get_lr()))
         train(model, device, train_loader, optimizer, criterion, epoch, log_iter=CFG.log_iter)
         test(model, device, test_loader, criterion, epoch)
         scheduler.step()
+        logging.info('best_acc: {}'.format(CFG.best_acc))
 
     logging.info('Finished Training !!!')
 

@@ -4,15 +4,17 @@ class Config(object):
     use_gpu = True
 
 # hyper parameters
-    num_epoch = 400
+    num_epoch = 2000
     batch_size = 256
     learning_rate = 0.01
 
-    mean = [0.4914, 0.4822, 0.4465]
-    std = [0.2470, 0.2435, 0.2616]
+    mean = (0.4914, 0.4822, 0.4465)
+    std = (0.2023, 0.1994, 0.2010)
+    # mean = (0.5, 0.5, 0.5)
+    # std = (0.5, 0.5, 0.5)
 
 # others
-    pth_file = "./checkpoints/net1st.pth"
+    pth_file = "./checkpoints/resnet18.pth"
     log_file = "./log/log.txt"
     log_iter = 50
     visualize = False

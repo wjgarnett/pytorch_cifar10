@@ -33,6 +33,7 @@ class CIFAR10Loader(Dataset): #封装数据增强，其实可以不用封装的�
                 # transforms.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1, hue=0.1),
                 # transforms.Grayscale(num_output_channels=3),
                 transforms.RandomCrop(32, padding=4),
+                transforms.RandomHorizontalFlip(),
                 transforms.ToTensor(),
                 transforms.Normalize(CFG.mean, CFG.std)])
         else:
