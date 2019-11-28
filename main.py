@@ -130,16 +130,17 @@ def main():
     model = model.to(device)  # to device
 
     #---优化器损失函数定义+学习率调整策略设置---
-    optimizer = optim.SGD(model.parameters(), lr=CFG.learning_rate, momentum=0.9)
+    optimizer = optim.SGD(model.parameters(), lr=CFG.learning_rate, momentum=0.9, weight_decay=5e-4)
     # optimizer = optim.Adadelta(model.parameters(), lr=CFG.learning_rate)
     # optimizer = optim.Adam(model.parameters(), lr=CFG.learning_rate)
     criterion = nn.CrossEntropyLoss()  # 损失函数
     # scheduler = ExponentialLR(optimizer, 0.9) #学习率调整策略
-    scheduler = StepLR(optimizer, 10, gamma=0.7)
+    scheduler = StepLR(optimizer, 100, gamma=0.1)
 
     #---train---
     for epoch in range(CFG.resume_epoch, CFG.resume_epoch+CFG.num_epoch):
         logging.info("epoch: {}, learning rate: {}".format(epoch, scheduler.get_lr()))
+        # logging.info("epoch: {}".format(epoch))
         train(model, device, train_loader, optimizer, criterion, epoch, log_iter=CFG.log_iter)
         test(model, device, test_loader, criterion, epoch)
         scheduler.step()

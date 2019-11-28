@@ -4,9 +4,9 @@ class Config(object):
     use_gpu = True
 
 # hyper parameters
-    num_epoch = 2000
-    batch_size = 256
-    learning_rate = 0.006
+    num_epoch = 300
+    batch_size = 128
+    learning_rate = 0.1
 
     mean = (0.4914, 0.4822, 0.4465)
     std = (0.2023, 0.1994, 0.2010)
